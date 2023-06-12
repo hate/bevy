@@ -79,7 +79,7 @@ impl UiSurface {
         let style = convert::from_style(context, style);
         match self.entity_to_taffy.entry(entity) {
             bevy_utils::hashbrown::hash_map::Entry::Occupied(entry) => {
-                self.taffy.set_style(*entry.get(), style).unwrap()
+                self.taffy.set_style(*entry.get(), style).unwrap();
             }
             bevy_utils::hashbrown::hash_map::Entry::Vacant(entry) => {
                 entry.insert(self.taffy.new_leaf(style).unwrap());
