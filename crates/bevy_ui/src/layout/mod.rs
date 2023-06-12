@@ -76,17 +76,15 @@ impl UiSurface {
     /// Retrieves the Taffy node associated with the given UI node entity and updates its style.
     /// If no associated Taffy node exists a new Taffy node is inserted into the Taffy layout.
     pub fn upsert_node(&mut self, entity: Entity, style: &Style, context: &LayoutContext) {
-        let mut added = false;
-        let taffy = &mut self.taffy;
-        let taffy_node = self.entity_to_taffy.entry(entity).or_insert_with(|| {
-            added = true;
-            taffy.new_leaf(convert::from_style(context, style)).unwrap()
-        });
-
-        if !added {
-            self.taffy
-                .set_style(*taffy_node, convert::from_style(context, style))
-                .unwrap();
+        let style = convert::from_style(context, style);
+        match self.entity_to_taffy.entry(entity) {
+            bevy_utils::hashbrown::hash_map::Entry::Occupied(entry) => {
+                self.taffy.set_style(*entry.get(), style).unwrap();
+            }
+            bevy_utils::hashbrown::hash_map::Entry::Vacant(entry) => {
+                let taffy_node = self.taffy.new_leaf(style).unwrap();
+                entry.insert(taffy_node);
+            }
         }
     }
 
