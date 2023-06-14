@@ -331,11 +331,11 @@ pub fn ui_layout_system(
 
 #[cfg(test)]
 mod tests {
-    use bevy_ecs::world::World;
-    use bevy_math::Vec2;
+    use crate::layout::convert::from_style;
     use crate::Style;
     use crate::UiSurface;
-    use crate::layout::convert::from_style;
+    use bevy_ecs::world::World;
+    use bevy_math::Vec2;
 
     #[test]
     fn test_upsert_node() {
@@ -375,8 +375,14 @@ mod tests {
         assert_eq!(ui_surface.taffy.style(taffynode_b).unwrap(), &taffystyle_a);
 
         // But the ids of the associated nodes should be unchanged
-        assert_eq!(*ui_surface.entity_to_taffy.get(&uinode_a).unwrap(), taffynode_a);
-        assert_eq!(*ui_surface.entity_to_taffy.get(&uinode_b).unwrap(), taffynode_b);
+        assert_eq!(
+            *ui_surface.entity_to_taffy.get(&uinode_a).unwrap(),
+            taffynode_a
+        );
+        assert_eq!(
+            *ui_surface.entity_to_taffy.get(&uinode_b).unwrap(),
+            taffynode_b
+        );
 
         // There should still be exactly two nodes in the layout
         assert_eq!(ui_surface.entity_to_taffy.len(), 2);
