@@ -563,7 +563,8 @@ pub fn extract_text_uinodes(
                     rect.max *= inverse_scale_factor;
                     extracted_uinodes.uinodes.push(ExtractedUiNode {
                         stack_index,
-                        transform: transform * Mat4::from_translation(position.extend(0.) * inverse_scale_factor),
+                        transform: transform
+                            * Mat4::from_translation(position.extend(0.) * inverse_scale_factor),
                         color,
                         rect,
                         image: atlas.texture.clone_weak(),
@@ -572,7 +573,7 @@ pub fn extract_text_uinodes(
                         flip_x: false,
                         flip_y: false,
                     });
-                }  
+                }
             } else {
                 let transform = global_transform.compute_matrix()
                     * Mat4::from_translation(-0.5 * uinode.size().extend(0.))
@@ -603,7 +604,7 @@ pub fn extract_text_uinodes(
                         flip_y: false,
                     });
                 }
-            } 
+            }
         }
     }
 }
