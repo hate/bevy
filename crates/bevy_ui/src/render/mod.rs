@@ -540,7 +540,8 @@ pub fn extract_text_uinodes(
                 continue;
             }
             let transform = global_transform.compute_matrix()
-                * Mat4::from_translation(-0.5 * uinode.size().extend(0.));
+                * Mat4::from_translation(-0.5 * uinode.size().extend(0.))
+                * Mat4::from_scale(Vec2::splat(inverse_scale_factor).extend(1.));
 
             let mut color = Color::WHITE;
             let mut current_section = usize::MAX;
@@ -556,18 +557,13 @@ pub fn extract_text_uinodes(
                     current_section = *section_index;
                 }
                 let atlas = texture_atlases.get(&atlas_info.texture_atlas).unwrap();
-
-                let mut rect = atlas.textures[atlas_info.glyph_index];
-                rect.min *= inverse_scale_factor;
-                rect.max *= inverse_scale_factor;
                 extracted_uinodes.uinodes.push(ExtractedUiNode {
                     stack_index,
-                    transform: transform
-                        * Mat4::from_translation(position.extend(0.) * inverse_scale_factor),
+                    transform: transform * Mat4::from_translation(position.extend(0.)),
                     color,
-                    rect,
+                    rect: atlas.textures[atlas_info.glyph_index],
                     image: atlas.texture.clone_weak(),
-                    atlas_size: Some(atlas.size * inverse_scale_factor),
+                    atlas_size: Some(atlas.size),
                     clip: clip.map(|clip| clip.clip),
                     flip_x: false,
                     flip_y: false,
